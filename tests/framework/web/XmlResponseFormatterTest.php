@@ -68,6 +68,28 @@ class XmlResponseFormatterTest extends FormatterTest
             ], "<response><a>1</a><b>abc</b><c><item>2</item><item>&lt;&gt;</item></c><item>1</item></response>\n"],
         ]);
     }
+    
+    public function formatTraversableObjectDataProvider()
+    {
+        $expectedXmlForStack = '';
+        
+        $postsStack = new \SplStack();
+        
+        $postsStack->push(new Post(915, 'record1'));
+        $expectedXmlForStack = '<Post><id>915</id><title>record1</title></Post>' .
+          $expectedXmlForStack;
+        
+        $postsStack->push(new Post(456, 'record2'));
+        $expectedXmlForStack = '<Post><id>456</id><title>record2</title></Post>' .
+          $expectedXmlForStack;
+        
+        $data = [
+            [$postsStack, "<response>$expectedXmlForStack</response>\n"]
+        ];
+        
+        // test Generators only if it implemented in current PHP version
+        return $this->addXmlHead($data);
+    }
 
     public function formatObjectDataProvider()
     {
